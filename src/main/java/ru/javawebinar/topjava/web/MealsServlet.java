@@ -2,8 +2,8 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.util.UserMealRepository;
-import ru.javawebinar.topjava.util.UserMealRepositoryMemoryImpl;
+import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.repository.UserMealRepositoryMemoryImpl;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import javax.servlet.RequestDispatcher;

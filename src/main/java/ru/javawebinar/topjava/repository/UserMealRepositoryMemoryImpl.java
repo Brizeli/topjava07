@@ -1,14 +1,10 @@
-package ru.javawebinar.topjava.util;
+package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.model.UserMealWithExceed;
+import ru.javawebinar.topjava.util.UserMealsUtil;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * Created by Next on 03.06.2016.
