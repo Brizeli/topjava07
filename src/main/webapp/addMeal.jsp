@@ -6,7 +6,8 @@
 <body>
 <form action="meals" method="post">
     <fieldset style="width: 300px;">
-        <input type="text" name="id" value="${meal.id}" hidden/>
+        <jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.UserMeal"/>
+        <input type="hidden" name="id" value="${meal.id}"/>
         Date and time<br>
         <input type="datetime-local" name="datetime" value="${meal.dateTime}" required/><br>
         Description<br>
