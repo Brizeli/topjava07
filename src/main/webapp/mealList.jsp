@@ -5,20 +5,12 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
-
-        .exceeded {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <section>
     <h2><a href="index.html">Home</a></h2>
-    <form action="filter" method="post">
+    <form action="meals?action=filter" method="post">
         <dl>
             <dt>From date</dt>
             <dd><input type="date" name="startDate"></dd>
@@ -29,11 +21,11 @@
         </dl>
         <dl>
             <dt>From time</dt>
-            <dd><input type="time" name="fromTime"></dd>
+            <dd><input type="time" name="startTime"></dd>
         </dl>
         <dl>
             <dt>To time</dt>
-            <dd><input type="time" name="toTime"></dd>
+            <dd><input type="time" name="endTime"></dd>
         </dl>
         <button type="submit">Filter</button>
     </form>
