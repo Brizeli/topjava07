@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,7 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
             userMeal.setId(counter.incrementAndGet());
         } else if (get(mealId, userId) == null) return null;
         Map<Integer, UserMeal> userMeals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
-        userMeals.put(mealId, userMeal);
+        userMeals.put(userMeal.getId(), userMeal);
         return userMeal;
     }
 
@@ -53,18 +54,23 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     }
 
     @Override
+    public boolean deleteAll(int userId) {
+        return repository.remove(userId)!=null;
+    }
+
+    @Override
     public UserMeal get(int id, int userId) {
         Map<Integer, UserMeal> userMeals = repository.get(userId);
         return userMeals == null ? null : userMeals.get(id);
     }
 
     @Override
-    public Collection<UserMeal> getAll(int userId) {
+    public List<UserMeal> getAll(int userId) {
         return repository.get(userId).values().stream().sorted(userMealComparator).collect(Collectors.toList());
     }
 
     @Override
-    public Collection<UserMeal> getBetween(LocalDateTime start, LocalDateTime end, int userId) {
+    public List<UserMeal> getBetween(LocalDateTime start, LocalDateTime end, int userId) {
         return getAll(userId).stream()
                .filter(meal -> TimeUtil.isBetween(meal.getDateTime(), start, end))
                .sorted(userMealComparator)

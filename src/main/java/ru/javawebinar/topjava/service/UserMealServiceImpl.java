@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -19,34 +20,37 @@ public class UserMealServiceImpl implements UserMealService {
     private UserMealRepository repository;
 
     @Override
-    public UserMeal get(int id, int userId) {
-        return null;
+    public UserMeal get(int id, int userId) throws NotFoundException {
+        return ExceptionUtil.checkNotFoundWithId(repository.get(id,userId),id);
     }
 
     @Override
     public UserMeal save(UserMeal meal, int userId) {
-        return null;
+        return repository.save(meal,userId);
     }
 
     @Override
     public void delete(int id, int userId) throws NotFoundException {
+        ExceptionUtil.checkNotFoundWithId(repository.delete(id,userId),id);
     }
 
     @Override
     public List<UserMeal> getAll(int userId) {
-        return null;
+        return repository.getAll(userId);
     }
 
     @Override
-    public void update(UserMeal meal) {
+    public UserMeal update(UserMeal meal, int userId) {
+        return ExceptionUtil.checkNotFoundWithId(repository.save(meal,userId),meal.getId());
     }
 
     @Override
-    public List<UserMeal> getBetween(LocalDate startDate, LocalDate endDate, int userId) {
-        return null;
+    public List<UserMeal> getBetweenDateTimes(LocalDateTime startDate, LocalDateTime endDate, int userId) {
+        return repository.getBetween(startDate,endDate.plusDays(1),userId);
     }
 
     @Override
-    public void deleteAll(int userId) {
+    public void deleteAll(int userId) throws NotFoundException {
+        ExceptionUtil.checkNotFoundWithId(repository.deleteAll(userId),userId);
     }
 }

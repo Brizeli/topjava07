@@ -4,6 +4,7 @@ import ru.javawebinar.topjava.model.UserMeal;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * GKislin
@@ -16,7 +17,9 @@ public interface UserMealRepository {
 
     UserMeal get(int id, int userId);
 
-    Collection<UserMeal> getAll(int userId);
+    List<UserMeal> getAll(int userId);
 
-    Collection<UserMeal> getBetween(LocalDateTime start, LocalDateTime end, int userId);
+    List<UserMeal> getBetween(LocalDateTime start, LocalDateTime end, int userId);
+
+    boolean deleteAll(int userId);
 }

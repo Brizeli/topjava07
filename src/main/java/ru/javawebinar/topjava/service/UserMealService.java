@@ -5,6 +5,8 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -12,16 +14,21 @@ import java.util.List;
  * 15.06.2015.
  */
 public interface UserMealService {
-    UserMeal get(int id, int userId);
+    UserMeal get(int id, int userId) throws NotFoundException;
+
     UserMeal save(UserMeal meal, int userId);
 
     void delete(int id, int userId) throws NotFoundException;
 
     List<UserMeal> getAll(int userId);
 
-    void update(UserMeal meal);
+    UserMeal update(UserMeal meal, int userId);
 
-    List<UserMeal> getBetween(LocalDate startDate, LocalDate endDate, int userId);
+    List<UserMeal> getBetweenDateTimes(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId);
 
-    void deleteAll(int userId);
+    default List<UserMeal> getBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
+        return getBetweenDateTimes(LocalDateTime.of(startDate, LocalTime.MIN), LocalDateTime.of(endDate, LocalTime.MAX), userId);
+    }
+
+    void deleteAll(int userId) throws NotFoundException;
 }
