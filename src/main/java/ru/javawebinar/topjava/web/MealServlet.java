@@ -27,14 +27,12 @@ public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
     private ConfigurableApplicationContext springContext;
     private UserMealRestController mealController;
-//    private UserMealRepository repository;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealController = springContext.getBean(UserMealRestController.class);
-//        repository = new InMemoryUserMealRepositoryImpl();
     }
 
     @Override

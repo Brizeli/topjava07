@@ -66,7 +66,7 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public List<UserMeal> getAll(int userId) {
-        return repository.get(userId).values().stream().sorted(userMealComparator).collect(Collectors.toList());
+        return repository.getOrDefault(userId,new ConcurrentHashMap<>()).values().stream().sorted(userMealComparator).collect(Collectors.toList());
     }
 
     @Override
