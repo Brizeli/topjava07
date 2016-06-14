@@ -56,6 +56,7 @@ public class UserMealRestController {
 
     public UserMeal create(UserMeal meal) {
         int userId = LoggedUser.id();
+        System.out.println(meal);
         LOG.info("create {} for user {}", meal, userId);
         return service.save(meal, userId);
     }
