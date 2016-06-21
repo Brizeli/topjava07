@@ -8,12 +8,14 @@ CREATE SEQUENCE global_seq START 100000;
 CREATE TABLE meals
 (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  dateTime    TIMESTAMP           DEFAULT now(),
+  datetime    TIMESTAMP           DEFAULT now(),
   description VARCHAR,
   calories    INTEGER DEFAULT 1000 NOT NULL,
-  user_id     INTEGER NOT NULL,
+  user_id     INTEGER              NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX meals_unique_datetime_idx ON meals (datetime);
+CREATE UNIQUE INDEX meals_unique_userid_idx ON meals (user_id);
 
 CREATE TABLE users
 (
