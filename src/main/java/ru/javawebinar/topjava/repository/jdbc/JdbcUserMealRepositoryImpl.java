@@ -45,7 +45,7 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
         Integer mealId = userMeal.getId();
         MapSqlParameterSource map = new MapSqlParameterSource()
                                             .addValue("id", mealId)
-                                            .addValue("datetime", userMeal.getDateTime())
+                                            .addValue("date_time", userMeal.getDateTime())
                                             .addValue("description", userMeal.getDescription())
                                             .addValue("calories", userMeal.getCalories())
                                             .addValue("user_id", userId);
@@ -54,7 +54,7 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
             userMeal.setId(newKey.intValue());
         } else {
             if (namedParameterJdbcTemplate.update(
-                "UPDATE meals SET datetime=:datetime, description=:description, " +
+                "UPDATE meals SET date_time=:date_time, description=:description, " +
                     "calories=:calories WHERE id=:id AND user_id=:user_id", map) == 0)
                 return null;
         }
@@ -74,11 +74,11 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public List<UserMeal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY datetime DESC", ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY date_time DESC", ROW_MAPPER, userId);
     }
 
     @Override
     public List<UserMeal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND datetime BETWEEN ? AND ? ORDER BY datetime DESC", ROW_MAPPER, userId, startDate, endDate);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND date_time BETWEEN ? AND ? ORDER BY datetime DESC", ROW_MAPPER, userId, startDate, endDate);
     }
 }
