@@ -1,9 +1,11 @@
 package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.repository.jdbc.JdbcUserMealRepositoryImpl;
 import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ import java.util.Collection;
 public class UserMealServiceImpl implements UserMealService {
 
     @Autowired
+    @Qualifier(value = "jdbcUserMealRepositoryImpl")
     private UserMealRepository repository;
 
     @Override

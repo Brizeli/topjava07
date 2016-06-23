@@ -27,9 +27,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 /**
  * Created by Next on 21.06.2016.
  */
-@ContextConfiguration({
-                          "classpath:spring/spring-app.xml",
-                          "classpath:spring/spring-db.xml"})
+@ContextConfiguration({"classpath:spring/spring-app.xml",
+                       "classpath:spring/spring-db.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserMealServiceTest {
     @Autowired

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.UserTestData;
@@ -30,6 +31,7 @@ public class InMemoryAdminRestControllerSpringTest {
     private AdminRestController controller;
 
     @Autowired
+    @Qualifier("inMemoryUserRepositoryImpl")
     private UserRepository repository;
 
     @Before
