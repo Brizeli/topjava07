@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
       @NamedQuery(name = UserMeal.DELETE, query = "DELETE FROM UserMeal m WHERE m.id=:id and m.user.id=:userId"),
       @NamedQuery(name = UserMeal.ALL_SORTED, query = "select m from UserMeal m where m.user.id=:userId order by m.dateTime desc"),
       @NamedQuery(name = UserMeal.GET, query = "select m from UserMeal m where m.id=:id and m.user.id=:userId"),
-      @NamedQuery(name = UserMeal.GET_BETWEEN, query = "select m from UserMeal m where m.user.id=:userId and m.dateTime between :startDate and :endDate order by m.dateTime")
+      @NamedQuery(name = UserMeal.GET_BETWEEN, query = "select m from UserMeal m where m.user.id=:userId and m.dateTime between :startDate and :endDate order by m.dateTime desc")
 })
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class UserMeal extends BaseEntity {
