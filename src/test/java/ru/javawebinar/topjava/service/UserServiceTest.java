@@ -5,12 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.javawebinar.topjava.Profiles;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -22,23 +21,8 @@ import java.util.Collections;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(Profiles.ACTIVE_DB)
-public class UserServiceTest {
+public abstract class UserServiceTest extends DbTest{
 
-    @Autowired
-    protected UserService service;
-
-    @Before
-    public void setUp() throws Exception {
-        service.evictCache();
-    }
-        
     @Test
     public void testSave() throws Exception {
         TestUser tu = new TestUser(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
@@ -67,6 +51,12 @@ public class UserServiceTest {
     public void testGet() throws Exception {
         User user = service.get(USER_ID);
         MATCHER.assertEquals(USER, user);
+    }
+
+    @Test
+    public void testGetWithMeals(){
+        User user = service.getWithMeals(USER_ID);
+        MealTestData.MATCHER.assertCollectionEquals(MealTestData.USER_MEALS,user.getMeals());
     }
 
     @Test(expected = NotFoundException.class)
