@@ -1,71 +1,79 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import ru.javawebinar.topjava.AuthorizedUser;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.service.UserMealService;
-import ru.javawebinar.topjava.to.UserMealWithExceed;
 import ru.javawebinar.topjava.util.TimeUtil;
-import ru.javawebinar.topjava.util.UserMealsUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.Objects;
 
 /**
- * GKislin
- * 06.03.2015.
+ * Created by Next on 08.07.2016.
  */
 @Controller
-public class UserMealRestController {
-    private static final Logger LOG = LoggerFactory.getLogger(UserMealRestController.class);
+@RequestMapping("meals")
+public class UserMealRestController extends AbstractMealController {
 
-    @Autowired
-    private UserMealService service;
-
-    public UserMeal get(int id) {
-        int userId = AuthorizedUser.id();
-        LOG.info("get meal {} for User {}", id, userId);
-        return service.get(id, userId);
+    @RequestMapping(method = RequestMethod.GET)
+    public String getAll(Model model) {
+        model.addAttribute("mealList", super.getAll());
+        return "mealList";
     }
 
-    public void delete(int id) {
-        int userId = AuthorizedUser.id();
-        LOG.info("delete meal {} for User {}", id, userId);
-        service.delete(id, userId);
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(HttpServletRequest request) {
+        super.delete(getId(request));
+        return "redirect:/meals";
     }
 
-    public List<UserMealWithExceed> getAll() {
-        int userId = AuthorizedUser.id();
-        LOG.info("getAll for User {}", userId);
-        return UserMealsUtil.getWithExceeded(service.getAll(userId), AuthorizedUser.getCaloriesPerDay());
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String update(Model model, HttpServletRequest request) {
+        model.addAttribute("meal", super.get(getId(request)));
+        return "mealEdit";
     }
 
-    public void update(UserMeal meal, int id) {
-        meal.setId(id);
-        int userId = AuthorizedUser.id();
-        LOG.info("update {} for User {}", meal, userId);
-        service.update(meal, userId);
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public String create(Model model) {
+        model.addAttribute("meal", new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000));
+        return "mealEdit";
     }
 
-    public UserMeal create(UserMeal meal) {
-        meal.setId(null);
-        int userId = AuthorizedUser.id();
-        LOG.info("create {} for User {}", meal, userId);
-        return service.save(meal, userId);
+    @RequestMapping(method = RequestMethod.POST)
+    public String edit(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        UserMeal userMeal = new UserMeal(id.isEmpty() ? null : Integer.valueOf(id),
+                                            LocalDateTime.parse(request.getParameter("dateTime")),
+                                            request.getParameter("description"),
+                                            Integer.valueOf(request.getParameter("calories")));
+        if (userMeal.isNew()) super.create(userMeal);
+        else super.update(userMeal, userMeal.getId());
+        return "redirect:/meals";
     }
 
-    public List<UserMealWithExceed> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        int userId = AuthorizedUser.id();
-        LOG.info("getBetween dates {} - {} for time {} - {} for User {}", startDate, endDate, startTime, endTime, userId);
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    public String filter(Model model, HttpServletRequest request) {
+        LocalDate startDate = TimeUtil.parseLocalDate(resetParam("startDate", request));
+        LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request));
+        LocalTime startTime = TimeUtil.parseLocalTime(resetParam("startTime", request));
+        LocalTime endTime = TimeUtil.parseLocalTime(resetParam("endTime", request));
+        request.setAttribute("mealList", super.getBetween(startDate, startTime, endDate, endTime));
+        return "mealList";
+    }
 
-        return UserMealsUtil.getFilteredWithExceeded(
-                service.getBetweenDates(
-                        startDate != null ? startDate : TimeUtil.MIN_DATE, endDate != null ? endDate : TimeUtil.MAX_DATE, userId),
-                        startTime != null ? startTime : LocalTime.MIN, endTime != null ? endTime : LocalTime.MAX, AuthorizedUser.getCaloriesPerDay()
-        );
+    private String resetParam(String param, HttpServletRequest request) {
+        String value = request.getParameter(param);
+        request.setAttribute(param, value);
+        return value;
+    }
+
+    private int getId(HttpServletRequest request) {
+        String id = Objects.requireNonNull(request.getParameter("id"));
+        return Integer.valueOf(id);
     }
 }
