@@ -21,13 +21,9 @@ abstract public class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     protected UserService service;
 
-    @Autowired
-    protected JpaUtil jpaUtil;
-
     @Before
     public void setUp() throws Exception {
         service.evictCache();
-        jpaUtil.clear2ndLevelHibernateCache();
     }
 
     @Test
@@ -82,6 +78,7 @@ abstract public class AbstractUserServiceTest extends AbstractServiceTest {
         TestUser updated = new TestUser(USER);
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.setRoles(Arrays.asList(Role.ROLE_ADMIN, Role.ROLE_USER));
         service.update(updated.asUser());
         MATCHER.assertEquals(updated, service.get(USER_ID));
     }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * User: gkislin
  * Date: 26.08.2014
  */
-
+@Transactional(readOnly = true)
 public abstract class AbstractJdbcUserMealRepositoryImpl<T> implements UserMealRepository {
 
     private SimpleJdbcInsert insertUserMeal;
@@ -41,6 +42,7 @@ public abstract class AbstractJdbcUserMealRepositoryImpl<T> implements UserMealR
     protected abstract T toDbValue(LocalDateTime ldt);
 
     @Override
+    @Transactional
     public UserMeal save(UserMeal userMeal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", userMeal.getId())
@@ -53,11 +55,9 @@ public abstract class AbstractJdbcUserMealRepositoryImpl<T> implements UserMealR
             Number newId = insertUserMeal.executeAndReturnKey(map);
             userMeal.setId(newId.intValue());
         } else {
-            if (namedParameterJdbcTemplate.update("" +
-                            "UPDATE meals " +
-                            "   SET description=:description, calories=:calories, date_time=:date_time " +
-                            " WHERE id=:id AND user_id=:user_id"
-                    , map) == 0) {
+            if (namedParameterJdbcTemplate.update(
+                "UPDATE meals SET description=:description, calories=:calories, date_time=:date_time " +
+                    "WHERE id=:id AND user_id=:user_id", map) == 0) {
                 return null;
             }
         }
@@ -65,6 +65,7 @@ public abstract class AbstractJdbcUserMealRepositoryImpl<T> implements UserMealR
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
         return jdbcTemplate.update("DELETE FROM meals WHERE id=? AND user_id=?", id, userId) != 0;
     }
