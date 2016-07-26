@@ -35,8 +35,8 @@
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                             <td>${user.roles}</td>
                             <td>
-                                <input type="checkbox"
-                                       <c:if test="${user.enabled}">checked</c:if> id="${user.id}"/>
+                                <input type="checkbox" onclick="enable($(this),${user.id})"
+                                       <c:if test="${user.enabled}">checked</c:if>/>
                             </td>
                             <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>
                             <td><a class="btn btn-xs btn-primary edit" id="${user.id}">Edit</a></td>
@@ -99,6 +99,7 @@
 <script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="webjars/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="webjars/noty/2.3.8/js/noty/packaged/jquery.noty.packaged.min.js"></script>
 <script type="text/javascript" src="resources/js/datatablesUtil.js"></script>
 <script type="text/javascript">
 
@@ -143,6 +144,10 @@
             ]
         });
         makeEditable();
+        $(':checkbox').each(function () {
+            if (!$(this).is(':checked'))
+                $(this).closest('tr').css("text-decoration", "line-through");
+        })
     });
 </script>
 </html>
