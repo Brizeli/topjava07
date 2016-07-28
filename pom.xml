@@ -17,7 +17,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <tomcat.version>8.0.33</tomcat.version>
-        <spring.version>4.2.6.RELEASE</spring.version>
+
+        <!--http://stackoverflow.com/questions/37651837/integrate-hibernate-5-2-with-spring-framework-4-x        -->
+        <spring.version>4.3.1.RELEASE</spring.version>
+        <spring-security.version>4.1.1.RELEASE</spring-security.version>
+        <spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
         <jackson-json.version>2.8.0</jackson-json.version>
 
         <!-- Logging -->
@@ -32,7 +36,8 @@
         <hamcrest.version>1.3</hamcrest.version>
 
         <!-- Hibernate -->
-        <hibernate.version>5.1.0.Final</hibernate.version>
+        <!--https://github.com/hibernate/hibernate-orm/wiki/Migration-Guide-&#45;&#45;5.2-->
+        <hibernate.version>5.2.1.Final</hibernate.version>
         <hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
 
         <!--Tools-->
@@ -45,10 +50,6 @@
         <webjars-noty.version>2.3.8</webjars-noty.version>
         <webjars-datatables.version>1.10.12</webjars-datatables.version>
 
-        <!--http://stackoverflow.com/questions/37651837/integrate-hibernate-5-2-with-spring-framework-4-x        -->
-        <spring.version>4.3.1.RELEASE</spring.version>
-        <spring-security.version>4.1.1.RELEASE</spring-security.version>
-        <spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
     </properties>
 
     <build>
@@ -114,28 +115,28 @@
                 </configuration>
             </plugin>
 
-<!--
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <contextFile>src/main/resources/tomcat/context.xml</contextFile>
-                    <systemProperties>
-                        <file.encoding>UTF-8</file.encoding>
-                        <spring.profiles.active>tomcat,datajpa</spring.profiles.active>
-                    </systemProperties>
-                    <protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                            <groupId>org.apache.tomcat.maven</groupId>
+                            <artifactId>tomcat7-maven-plugin</artifactId>
+                            <version>2.2</version>
+                            <configuration>
+                                <contextFile>src/main/resources/tomcat/context.xml</contextFile>
+                                <systemProperties>
+                                    <file.encoding>UTF-8</file.encoding>
+                                    <spring.profiles.active>tomcat,datajpa</spring.profiles.active>
+                                </systemProperties>
+                                <protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.postgresql</groupId>
+                                    <artifactId>postgresql</artifactId>
+                                    <version>${postgresql.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+            -->
         </plugins>
     </build>
 
@@ -242,12 +243,7 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-java8</artifactId>
+            <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
         <dependency>
