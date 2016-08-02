@@ -63,6 +63,18 @@ $(function () {
                 updateTable();
                 return false;
             });
+            $("#dateTime").datetimepicker({
+                format: 'Y-m-d H:i',
+                lang:'ru'
+            });
+            $('#startDate, #endDate').datetimepicker({
+                timepicker:false,
+                format:'Y-m-d'
+            });
+            $('#startTime, #endTime').datetimepicker({
+                datepicker:false,
+                format:'H:i'
+            });
             makeEditable();
         }
     });
