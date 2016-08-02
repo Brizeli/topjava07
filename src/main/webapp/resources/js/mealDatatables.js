@@ -5,7 +5,6 @@ var ajaxUrl = 'ajax/profile/meals/';
 var datatableApi;
 
 function updateTable() {
-    debugger;
     $.ajax({
         type: "POST",
         url: ajaxUrl + 'filter',
@@ -16,53 +15,55 @@ function updateTable() {
 }
 
 $(function () {
-    datatableApi = $('#datatable').DataTable(
-        {
-            "paging": false,
-            "info": true,
-            "columns": [
-                {
-                    "data": "dateTime",
-                    "render": function (date, type, row) {
-                        if (type == 'display') {
-                            return date.replace('T', ' ');
-                        }
-                        return date;
+    datatableApi = $('#datatable').DataTable({
+        "ajax":{
+            "url":ajaxUrl,
+            "dataSrc":""
+        },
+        "paging": false,
+        "info": true,
+        "columns": [
+            {
+                "data": "dateTime",
+                "render": function (date, type, row) {
+                    if (type == 'display') {
+                        return date.replace('T', ' ');
                     }
-                },
-                {
-                    "data": "description"
-                },
-                {
-                    "data": "calories"
-                },
-                {
-                    "defaultContent": "",
-                    "orderable": false,
-                    "render": renderEditBtn
-                },
-                {
-                    "defaultContent": "",
-                    "orderable": false,
-                    "render": renderDeleteBtn
+                    return date;
                 }
-            ],
-            "order": [
-                [
-                    0,
-                    "desc"
-                ]
-            ],
-            "createdRow": function (row, data, dataIndex) {
-                $(row).addClass(data.exceed ? 'exceeded' : 'normal');
             },
-            "initComplete": function () {
-                debugger;
-                $("#filter").submit(function () {
-                    updateTable();
-                    return false;
-                });
-                makeEditable();
+            {
+                "data": "description"
+            },
+            {
+                "data": "calories"
+            },
+            {
+                "defaultContent": "",
+                "orderable": false,
+                "render": renderEditBtn
+            },
+            {
+                "defaultContent": "",
+                "orderable": false,
+                "render": renderDeleteBtn
             }
-        });
+        ],
+        "order": [
+            [
+                0,
+                "desc"
+            ]
+        ],
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass(data.exceed ? 'exceeded' : 'normal');
+        },
+        "initComplete": function () {
+            $("#filter").submit(function () {
+                updateTable();
+                return false;
+            });
+            makeEditable();
+        }
+    });
 });

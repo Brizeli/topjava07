@@ -45,7 +45,7 @@ public class UserMealAjaxController extends AbstractUserMealController {
             result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
             return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        if (meal.getId()==0) {
+        if (meal.isNew()) {
             super.create(meal);
         } else {
             super.update(meal, meal.getId());
